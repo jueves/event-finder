@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+file_aemet = open("aemet_api_key.txt")
+aemet_key = file_aemet.readline()
+file_aemet.close()
 
 def getWeather(municipio, fecha):
     return prevision
