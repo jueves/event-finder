@@ -26,6 +26,7 @@ Los datos han sido recolectados desde la web [La Agenda](https://lagenda.org) y 
 Tanto el código como el data set se pueden encontrar en el repositorio de Github siguiente:
 
 ## Contribuciones
+
 Investigación previa:
 Redacción de las respuestas:
 Desarrollo código:
