@@ -30,45 +30,6 @@ def getPageSoup(initial_date, end_date):
     soup = BeautifulSoup(lagenda_page.content)
     return(soup)
 
-
-def getDates0(evento_data):
-        # Busca todas las fechas en las que sucede un evento
-        
-        fechas_raw = evento_data.find_all("span",
-                                          {"class": "date-display-single"})
-        fechas_clean = []
-        for fecha in fechas_raw:
-            day = int(fecha.string[-8:-6])
-            month = int(fecha.string[-5:-3])
-            year = int(fecha.string[-2:]) + 2000
-            fechas_clean.append(datetime.date(year, month, day))
-
-        rangos_fechas_raw = evento_data.find_all("span",{"class": "date-display-range"}) 
-        for rango in rangos_fechas_raw:
-            start_date_raw = rango.find(attrs={"class": "date-display-start"})
-            end_date_raw = rango.find(attrs={"class": "date-display-end"})
-
-            # Set start date
-            day_start = int(start_date_raw.string[-8:-6])
-            month_start = int(start_date_raw.string[-5:-3])
-            year_start = int(start_date_raw.string[-2:]) + 2000
-            start_date = datetime.date(year_start, month_start, day_start)
-
-            # Set end date
-            day_end = int(end_date_raw.string[-8:-6])
-            month_end = int(end_date_raw.string[-5:-3])
-            year_end = int(end_date_raw.string[-2:]) + 2000
-            end_date = datetime.date(year_end, month_end, day_end)
-
-            # Set range
-            period_length = (end_date-start_date).days
-            for i in range(period_length+1):
-                fechas_clean.append(start_date+datetime.timedelta(days=i))
-
-        # Sort and remove duplicated
-        fechas_clean = sorted(list(set(fechas_clean)))
-        return fechas_clean
-
 def getDates(evento_data):
         # Busca todas las fechas en las que sucede un evento
         
