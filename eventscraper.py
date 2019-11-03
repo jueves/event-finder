@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import datetime
 from urllib.parse import unquote
-
+import re
 
 # Functions to scrape lagenda.org
 
@@ -31,7 +31,7 @@ def getPageSoup(initial_date, end_date):
     return(soup)
 
 
-def getDates(evento_data):
+def getDates0(evento_data):
         # Busca todas las fechas en las que sucede un evento
         
         fechas_raw = evento_data.find_all("span",
@@ -69,6 +69,91 @@ def getDates(evento_data):
         fechas_clean = sorted(list(set(fechas_clean)))
         return fechas_clean
 
+def getDates(evento_data):
+        # Busca todas las fechas en las que sucede un evento
+        
+        fechas_raw = evento_data.find_all("span",
+                                          {"class": "date-display-single"})
+        fechas_clean = []
+        for fecha in fechas_raw:
+           fechas_clean.append(cleanDateTime(fecha))
+
+        rangos_fechas_raw = evento_data.find_all("span",{"class": "date-display-range"}) 
+        for rango in rangos_fechas_raw:
+            start_date_raw = rango.find(attrs={"class": "date-display-start"})
+            end_date_raw = rango.find(attrs={"class": "date-display-end"})
+
+            # Set start date
+            start_date = cleanDateTime(start_date_raw, True)
+            # Set end date
+            end_date = cleanDateTime(end_date_raw, True)
+            # Get weekdays
+            week_days = getWeekDays(rango)
+            # Set range
+            period_length = (end_date-start_date).days
+                       
+            for i in range(period_length+1):
+                this_date = start_date+datetime.timedelta(days=i)
+                if (this_date.weekday() in week_days):
+                    fechas_clean.append(this_date)
+
+        # Sort and remove duplicated
+        fechas_clean = sorted(list(set(fechas_clean)))
+        return fechas_clean
+
+def getWeekDays(rango):
+    text = str(rango.parent.next_sibling).lower()
+    semana = {"lunes":0, "martes":1, "miércoles":2, "miercoles":2, "jueves":3,
+              "viernes":4, "sábado":5, "sabado":5, "domingo":6}
+    dias_evento = []
+    # Días sueltos
+    for dia in semana:
+        dia_encontrado = re.findall(dia, text)
+        if (len(dia_encontrado)>0):
+            dias_evento.append(semana[dia_encontrado[0]])
+    
+    # Rangos de días
+    for dia1 in semana:
+        for dia2 in semana:
+            rango_a_buscar = dia1+" a "+dia2
+            rango_encontrado = re.findall(rango_a_buscar, text)
+            if (len(rango_encontrado)>0):
+                for i in range(semana[dia1], semana[dia2]):
+                    dias_evento.append(i)
+    
+    # Si no se mencionan días, elegir todos.
+    if (len(dias_evento)==0):
+        dias_evento = [0, 1, 2, 3, 4, 5, 6]
+    
+    # Eliminar repetidos
+    dias_evento = sorted(list(set(dias_evento))) 
+    return(dias_evento)
+
+def cleanDateTime(fecha_raw, is_range=False):
+            # Obtiene la fecha        
+            day = int(fecha_raw.string[-8:-6])
+            month = int(fecha_raw.string[-5:-3])
+            year = int(fecha_raw.string[-2:]) + 2000                    
+            
+            # Busca un rango de horas o una hora suelta
+            hora_block = ""
+            if (is_range):
+                hora_block = str(fecha_raw.parent.parent.next_sibling)
+            else:
+                hora_block = str(fecha_raw.parent.next_sibling)
+            
+            hora_range_raw = re.findall(r"[0-2][0-9]:[0-5][0-9] a [0-2][0-9]:[0-5][0-9]", hora_block)
+            hora_raw = re.findall(r"[0-2][0-9]:[0-5][0-9]", hora_block)
+            
+            # Si sólo hay una hora, o un rango de hora, escoge la primera hora.
+            if (len(hora_raw)==1 or len(hora_range_raw)==1):
+                hora = [int(hora_raw[0][0:2]), int(hora_raw[0][3:5])]
+            else:
+                hora = [0, 0]
+                
+            fecha_clean = datetime.datetime(year, month, day, hora[0], hora[1])
+            return(fecha_clean)
+    
 
 def scrapEvents(soup):
     # Obtiene información para todos los eventos incluídos
@@ -90,9 +175,10 @@ def scrapEvents(soup):
     for evento in tabla_eventos_soups:
         evento_data = evento[0].find("div", {"class": "summary entry-summary"})
         url_event = evento[1]
-        fechas = getDates(evento_data)
         title = evento_data.find_all('h1', {"itemprop": "name"})[0].span.string
-
+        fechas = getDates(evento_data)
+        description = evento_data.p.string
+        
         # Location
         enlaces_evento = evento_data.find_all('a')
         for enlace in enlaces_evento:
@@ -110,12 +196,11 @@ def scrapEvents(soup):
 
         # Create one copy of the event per day the event happens
         for i in range(len(fechas)):
-            tabla_eventos.append([title, fechas[i], location, category,
+            tabla_eventos.append([title, fechas[i], location, description, category,
                                  url_event])
 
     # Convertir la tabla a un dataframe de Pandas
-    data = pd.DataFrame(tabla_eventos, columns=["title", "date",
-                                                "location", "category", "url"])
+    data = pd.DataFrame(tabla_eventos, columns=["title", "date", "location", "description", "category", "url"])
     return(data)
 
 def getEvents(initial_date, end_date):
