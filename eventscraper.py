@@ -14,8 +14,7 @@ def getPageSoup(initial_date, end_date):
     # de eventos en dicho rango de fechas.
 
     # Obtener URL
-    urlpart1 = ("https://lagenda.org/programacion/hoy?" +
-                "field_fecha_value%5Bmin%5D%5Bdate%5D=")
+    urlpart1 = ("https://lagenda.org/programacion/hoy?field_fecha_value%5Bmin%5D%5Bdate%5D=")
     urlsep = "%2F"
     urlpart2 = "&field_fecha_value%5Bmax%5D%5Bdate%5D="
     initial_formated_date = (str(initial_date.day)+urlsep
@@ -63,6 +62,10 @@ def getDates(evento_data):
         return fechas_clean
 
 def getWeekDays(rango):
+    # Recibe el bloque de HTML que incluye los días de la semana que se celebra
+    # el evento y devuelve una lista con dichos días en formato numérico.
+    # Ej: "Lunes, miércoles y viernes" => [0, 2, 4]
+    
     text = str(rango.parent.next_sibling).lower()
     semana = {"lunes":0, "martes":1, "miércoles":2, "miercoles":2, "jueves":3,
               "viernes":4, "sábado":5, "sabado":5, "domingo":6}
@@ -91,7 +94,9 @@ def getWeekDays(rango):
     return(dias_evento)
 
 def cleanDateTime(fecha_raw, is_range=False):
-            # Obtiene la fecha        
+            # Recibe el bloque de HTML que incluye la fecha y hora del evento
+            # y los devuelve en forma de objeto datetime.
+            
             day = int(fecha_raw.string[-8:-6])
             month = int(fecha_raw.string[-5:-3])
             year = int(fecha_raw.string[-2:]) + 2000                    
@@ -122,7 +127,8 @@ def scrapEvents(soup):
     
     eventos = soup.find_all("h4", {"class": "title"})
 
-    # Obtener datos para cada evento
+    # Se crea una tabla con un objeto tipo BeautifulSoup para cada evento
+    # y su url correspondiente.
     tabla_eventos_soups = []
     for evento in eventos:
         url_event = "https://www.lagenda.org" + evento.parent.a['href']
@@ -131,7 +137,8 @@ def scrapEvents(soup):
             evento_page = requests.get(url_event)
             evento_soup = BeautifulSoup(evento_page.content)
             tabla_eventos_soups.append([evento_soup, url_event])
-
+    
+    # Se genera la tabla con los datos de cada evento
     tabla_eventos = []
     for evento in tabla_eventos_soups:
         evento_data = evento[0].find("div", {"class": "summary entry-summary"})
@@ -155,21 +162,22 @@ def scrapEvents(soup):
             elif ("categoria" in palabras_enlace):
                     category = unquote(palabras_enlace[2]).replace("-", " ")
 
-        # Create one copy of the event per day the event happens
+        # Se añade una fila con los datos del evento para cada día
+        # que este acontece.
         for i in range(len(fechas)):
             tabla_eventos.append([title, fechas[i], location, description, category,
                                  url_event])
 
-    # Convertir la tabla a un dataframe de Pandas
+    # Se convierte la tabla a un dataframe de Pandas
     data = pd.DataFrame(tabla_eventos, columns=["title", "date", "location", "description", "category", "url"])
     return(data)
 
 def getEvents(initial_date, end_date):
-    # initial_date Objeto tipo date. Fecha de inicio del periodo sobre el
-    # que queremos ver eventos.
-    # end_date Objeto tipo date. Fecha final de dicho periodo.
-    # data Dataframe de pandas con los datos sin procesar. No incluye
-    # meteorología ni los lugares no han sido proecsador por getProperName()
+    # Toma las fechas de inicio y fin del periodo sobre el que queremos
+    # consultar eventos. Ambas han de ser objetos de tipo datetime.
+    # Devuelve un dataframe de Pandas con los datos de los eventos.
+    # No incluye la metereología.
+    
     lagenda_soup = getPageSoup(initial_date, end_date)
     data = scrapEvents(lagenda_soup)
     return(data)
