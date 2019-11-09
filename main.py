@@ -4,7 +4,7 @@ from eventscraper import getEvents
 from weather import getWeather
 from location import getMunicipalityCode
 import datetime
-"""
+
 # Carga de las API keys
 # Cada usuario ha de tener sus propias claves. En este caso, para la práctica se adjuntan en el documento que se sube la web
 file_aemet = open("aemet_api_key.txt")
@@ -13,9 +13,7 @@ file_aemet.close()
 file_gmaps = open("gmaps_api_key.txt")
 gmaps_key = file_gmaps.readline()
 file_gmaps.close()
-"""
-aemet_key = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqdmVsYXpxdWV6bkB1b2MuZWR1IiwianRpIjoiZjQ3Yzk4Y2QtZjE2MS00MDE5LThjMmItZDRiNmRjYmE3Zjg3IiwiaXNzIjoiQUVNRVQiLCJpYXQiOjE1NzIzNzYyNTgsInVzZXJJZCI6ImY0N2M5OGNkLWYxNjEtNDAxOS04YzJiLWQ0YjZkY2JhN2Y4NyIsInJvbGUiOiIifQ.6NfCcBqhSlDQNCbMtmwsSkIjkR3vMbjS6U8czA9DjAk'
-gmaps_key = 'AIzaSyDvR9SKBE7-LEN6_boq6RLZuGqpJ66O-2Q'
+
 
 
 # Fechas para hacer el test. Tener en cuenta que el rango de predicción de la AEMET es de 7 días
