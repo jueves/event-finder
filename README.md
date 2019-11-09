@@ -28,7 +28,8 @@ Para cada evento, el cual se corresponde con un registro en el conjunto de datos
 * **date**: día en el que se celebra el evento, en el formato dd/mm/aaa.  
 * **location**: lugar donde se celebra el evento. Str.
 * **catrgory**: categoría en la que se engloba el evento. Str.  
-* **url**: url en la que se publica el evento. Str.  
+* **url**: url en la que se publica el evento. Str. 
+* **codigoMunicipio**: código del municipio donde se celebra el evento. Int.
 * **estadoCielo**: recoge el estado del cielo el día del evento. Predicción 00-24. Vacío en caso de estar despejado o no tener predicción disponible. Str.
 * **probPrecipitacion**: recoge la probabilidad de que produzcan precipitaciones. Predicción 00-24. Int.
 * **sensTermMax**: recoge la sensación térmica máxima el día del evento. Int.
@@ -41,7 +42,7 @@ Los datos de predicción meteorológica (**estadoCielo, probPrecipitacion, sensT
 
 Además de los paquetes anteriores, se utilizan otras librerías como *Pandas* o *Datetime*
 
-En cuanto al periodo de tiempo,
+En cuanto al periodo de tiempo, sólo se toman datos a una semana vista, puesto que es el alcance de predicción que ofrece AEMET.
 
 ## Agredecimientos
 
