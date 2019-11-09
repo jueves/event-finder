@@ -12,7 +12,6 @@ apyKey = file_aemet.readline()
 file_aemet.close()
 """
 #Alternativa, pasar la APIKEY por parametro, comentar las líneas anteriores y desconmentar la siguiente
-
 apyKey='PEGAR LA CLAVE'
 """
 
@@ -35,12 +34,13 @@ def getMunPrediction(codigoMun):
     datos = res.read().decode('utf-8','ignore')
     datos= json.loads(datos)
     return datos
-
+"""
 #Pasa un objeto tipo str en formato dd-mm-aaaa a un tipo de dato datetime
+#como en main.py ya se hace la transformación, queda sólo para realizar test
 def srtDatetime(fechaStr):
     fechaStr = datetime.datetime.strptime(fechaStr, '%d-%m-%Y')
     return fechaStr
-
+"""
 #Comprobación si existen predicciones disponibles: evalua si una fecha
 #de un evento está dentro del rango de predicción que tiene disponible la AEMET
 #Se usa como guía la web:
@@ -50,9 +50,9 @@ def fechaRangoPrediccion(fechaEvento):
     #Alcance máximo de predicción ofrecida por la AEMET
     diasMax=datetime.datetime.today() + datetime.timedelta(days=6)
     
-    #Paso de tipo de datos str a datetime
+    """#Paso de tipo de datos str a datetime
     fechaEvento = srtDatetime(fechaEvento)
-    
+    """
     #calcula la diferencia de días
     resta=diasMax-fechaEvento
     
@@ -73,7 +73,8 @@ def getWeather(codigoMun,fecha):
         datosWeather="Sin datos disponibles de predicción"
     else:
         #se calcula el día objetivo para obtener los datos en forma de índice
-        fecha=srtDatetime(fecha)
+        """fecha=srtDatetime(fecha)
+        """
         hoy=datetime.datetime.today()
         diferencia= fecha - hoy
         resta=diferencia.days+1
@@ -81,7 +82,7 @@ def getWeather(codigoMun,fecha):
         #Obtenemos la predicción del municipio de interés
         dat=getMunPrediction(codigoMun)
         
-        #Se guardan los datos de la predicción en una lista
+        #Se guardan los datos de la predicción
         datosWeather={'estadoCielo': dat[0]['prediccion']['dia'][resta]['estadoCielo'][0]['descripcion'],
                       'probPrecipitacion':dat[0]['prediccion']['dia'][resta]['probPrecipitacion'][0]['value'],
                       'sensTermMax':dat[0]['prediccion']['dia'][resta]['sensTermica']['maxima'],
@@ -95,7 +96,6 @@ def getWeather(codigoMun,fecha):
 municipio='38023'
 datossss=getMunPrediction(municipio)
 #vista previa para el municipio de la Laguna
-
 municipio='38024'
 fechaEvento='14-11-2019'
 print(getWeather(municipio,fechaEvento))
