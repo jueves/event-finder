@@ -16,7 +16,7 @@ Datos de eventos y condiciones meteorológicas esperadas
 
 ## Descripción del data set
 
-Para dar respuesta a esta necesidad, el data set está compuesto de las variables principales referentes al evento: fecha, descripción, hora, municipio donde se celebra,... y datos referentes a las condiciones meteorológicas esperadas: temperatura, estado del cielo y probabilidad de lluvia.
+Para dar respuesta a esta necesidad, el data set está compuesto de las variables principales referentes al evento: fecha, descripción, hora, municipio donde se celebra,... y datos referentes a las condiciones meteorológicas esperadas: temperatura, estado del cielo, probabilidad de lluvia.
 
 ## Representación gráfica
 
@@ -49,10 +49,11 @@ En cuanto al periodo de tiempo, sólo se toman datos a una semana vista, puesto 
 La información ha sido recopilada de diferentes fuentes:
 
 ### [La Agenda](https://lagenda.org)
- y a través de la API de la [AEMET](https://opendata.aemet.es/dist/index.html?#!/predicciones-especificas/Predicci%C3%B3n_por_municipios_diaria_Tiempo_actual). Para los datos de los eventos, se ha hecho uso del lenguaje de programación Python y de técnicas de *Web Scraping* para extraer la información alojada en las páginas HTML. Para los datos de la AEMET, se ha hecho uso de la API de la AEMET, donde se indican todos los pasos a seguir para hacer un buen uso de ella.
-Los datos han sido recolectados desde la web [La Agenda](https://lagenda.org) y a través de la API de la [AEMET](https://opendata.aemet.es/dist/index.html?#!/predicciones-especificas/Predicci%C3%B3n_por_municipios_diaria_Tiempo_actual). Para los datos de los eventos, se ha hecho uso del lenguaje de programación Python y de técnicas de *Web Scraping* para extraer la información alojada en las páginas HTML. Para los datos de la AEMET, se ha hecho uso de la API de la AEMET, donde se indican todos los pasos a seguir para hacer un buen uso de ella.
 
-Se desconoce si han habido iniciativas similares a esta, pero si son numerosos los estudios en los que se relaciona una variable endógena con variables exógenas, como las condiciones meteorológicas.
+Gracias a esta web hemos podido obtener los datos referidos a los eventos, utilizando técnicas de *Web Scraping* para extraer la información alojada en las páginas HTML.
+
+### [AEMET](https://opendata.aemet.es/dist/index.html?#!/predicciones-especificas/Predicci%C3%B3n_por_municipios_diaria_Tiempo_actual)
+A través del *Open Data* de la AEMET ha sido posible descargar información meteorológica para la fecha en la que se produce el evento. Agradecer la claridad para hacer uso de esta API en esta propia web.
 
 ## Inspiración
 
@@ -62,6 +63,7 @@ Sin embargo, esta no es la única utilidad que se le podría dar a este proyecto
 
 Otra aplicabilidad de este data set sería poder hacer un estudio de la relación que existe entre la venta de entradas para un evento y las condiciones meteorológicas previstas. Este análisis permitiría estimar a los organizadores del evento la afluencia de público y, en consecuencia, dimensionar los servicios acordes con el público esperado.
 
+Se desconoce si han habido iniciativas similares a esta, pero si son numerosos los estudios en los que se relaciona una variable endógena con variables exógenas, como las condiciones meteorológicas.
 
 ## Licencia
 

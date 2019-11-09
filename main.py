@@ -30,7 +30,9 @@ for i in range(len(legenda_data)):
 
 legenda_data['codigoMunicipio'] = codigoMunicipio
 
-#Obtención de los datos de la predicción
+# Crear un bucle para obtener los datos del código del municipio y, 
+# con ese código, junto con la fecha del evento, obtener los datos de la 
+# predicción para ese día
 estadoCielo=[]
 probPrecipitacion=[]
 sensTermMax=[]
@@ -53,17 +55,7 @@ legenda_data['sensTermMax'] = sensTermMax
 legenda_data['sensTermMin'] = sensTermMin
 legenda_data['temperaturaMax'] = temperaturaMax
 legenda_data['temperaturaMin'] = temperaturaMin
-"""
-# Crear un bucle para obtener los datos del código del municipio y, 
-# con ese código, junto con la fecha del evento, obtener los datos de la 
-# predicción para ese día
-legenda_data['codigoMun'] = 0
-for i in range(len(legenda_data['codigoMun'])):
-    legenda_data['codigoMun'][i]=getMunicipalityCode(legenda_data['location'][i])
-    legenda_data['datosPrediccion'][i]=getWeather(legenda_data['codigoMun'][i],legenda_data['date'][i])
 
-print(legenda_data[0])
 
 #guardar los datos en un documento .csv
 legenda_data.to_csv('DatosLegenda.csv')
-"""
