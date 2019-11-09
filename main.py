@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from eventscraper import getEvents
-#from weather import getWeather
+from weather import getWeather
 from location import getMunicipalityCode
 import datetime
 # Load API keys
@@ -14,7 +14,20 @@ gmaps_key = file_gmaps.readline()
 file_gmaps.close()
 
 # Dummy dates for testing
-dummy_date1 = datetime.date(2019, 11, 6)
-dummy_date2 = datetime.date(2019, 11, 8)
+dummy_date1 = datetime.date(2019, 11, 9)
+dummy_date2 = datetime.date(2019, 11, 12)
 
-lagenda_data = getEvents(dummy_date1, dummy_date2)
+legenda_data = getEvents(dummy_date1, dummy_date2)
+
+# Crear un bucle para obtener los datos del código del municipio y, 
+# con ese código, junto con la fecha del evento, obtener los datos de la 
+# predicción para ese día
+legenda_data['codigoMun'] = 0
+for i in range(len(legenda_data['codigoMun'])):
+    legenda_data['codigoMun'][i]=getMunicipalityCode(legenda_data['location'][i])
+    legenda_data['datosPrediccion'][i]=getWeather(legenda_data['codigoMun'][i],legenda_data['date'][i])
+
+print(legenda_data[0])
+
+#guardar los datos en un documento .csv
+legenda_data.to_csv('DatosLegenda.csv')
