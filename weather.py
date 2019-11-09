@@ -48,7 +48,7 @@ def srtDatetime(fechaStr):
 def fechaRangoPrediccion(fechaEvento):
 
     #Alcance máximo de predicción ofrecida por la AEMET
-    diasMax=datetime.datetime.today() + datetime.timedelta(days=6)
+    diasMax=datetime.datetime.today().date() + datetime.timedelta(days=6)
     
     """#Paso de tipo de datos str a datetime
     fechaEvento = srtDatetime(fechaEvento)
@@ -75,7 +75,7 @@ def getWeather(codigoMun,fecha):
         #se calcula el día objetivo para obtener los datos en forma de índice
         """fecha=srtDatetime(fecha)
         """
-        hoy=datetime.datetime.today()
+        hoy=datetime.datetime.today().date()
         diferencia= fecha - hoy
         resta=diferencia.days+1
         
