@@ -22,23 +22,24 @@ class Location:
         # Comprueba si ya tenemos almacenado el código postal del lugar.
         if location_name in self.saved_locations.keys():
             geolocation = self.saved_locations[location_name]
-        else:
+        elif isinstance(location_name, str):
             # Utiliza la API de GoogleMaps para obtener información sobre el lugar.
             geocode_point = geocoder.google(location_name + ", Islas Canarias",
                                              key=self.gmaps_key, components="country:ES")
             
             # Con objeto de reducir los valores del diccionario se buscan las coordenadas
             # centrales de la localidad
-            geocode_locality = geocoder.google(geocode_point.locality+ ", Islas Canarias",
-                                            key=self.gmaps_key, components="country:ES")
-            
-            geolocation = geocode_locality.latlng
-            
-            # Redondeamos las coordenadas.
-            # Dos decimales permiten definir un punto con aprox 1km de error,
-            # lo cual es sobradamente suficiente para una predicción meteorológica.
-            geolocation = [round(geolocation[0], 2), round(geolocation[1], 2)]
-            self.saved_locations.update({location_name: geolocation})
+            if hasattr(geocode_point, "locality") and isinstance(geocode_point.locality, str):
+                geocode_locality = geocoder.google(geocode_point.locality+ ", Islas Canarias",
+                                                key=self.gmaps_key, components="country:ES")
+                
+                geolocation = geocode_locality.latlng
+                
+                # Redondeamos las coordenadas.
+                # Dos decimales permiten definir un punto con aprox 1km de error,
+                # lo cual es sobradamente suficiente para una predicción meteorológica.
+                geolocation = [round(geolocation[0], 2), round(geolocation[1], 2)]
+                self.saved_locations.update({location_name: geolocation})
         
         return(geolocation)
         
