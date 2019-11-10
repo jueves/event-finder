@@ -20,9 +20,13 @@ Para dar respuesta a esta necesidad, el data set está compuesto de las variable
 
 ## Representación gráfica
 
-![Imágen real de uno de los eventos (TENERIFEANDO POR EL MUNDO | CICLO VIAJEROS)](https://github.com/jonay-ve/PRAC-1/blob/master/Imagen1.png)
+[Imagen real de uno de los eventos (TENERIFEANDO POR EL MUNDO | CICLO VIAJEROS)] (https://www.lagenda.org/programacion/charla-viajeros-cuba-13908)
 
-![Imágen de cómo se vería el evento con los datos de predicción meteorológica (TENERIFEANDO POR EL MUNDO | CICLO VIAJEROS)](https://github.com/jonay-ve/PRAC-1/blob/master/Imagen2.jpg)
+![Imagen real de uno de los eventos (TENERIFEANDO POR EL MUNDO | CICLO VIAJEROS)](https://github.com/jonay-ve/PRAC-1/blob/master/Imagen1.png)
+
+Imagen de cómo se vería el evento con los datos de predicción meteorológica
+
+![Imagen de cómo se vería el evento con los datos de predicción meteorológica (TENERIFEANDO POR EL MUNDO | CICLO VIAJEROS)](https://github.com/jonay-ve/PRAC-1/blob/master/Imagen2.jpg)
 
 ## Contenido
 
