@@ -22,7 +22,7 @@ Para dar respuesta a esta necesidad, el data set está compuesto de las variable
 
 ![Imágen real de uno de los eventos (TENERIFEANDO POR EL MUNDO | CICLO VIAJEROS)](https://github.com/jonay-ve/PRAC-1/blob/master/Imagen1.png)
 
-![Imágen de cómo se vería el evento con los datos de predicción meteorológica (TENERIFEANDO POR EL MUNDO | CICLO VIAJEROS)](imagen2.jpg)
+![Imágen de cómo se vería el evento con los datos de predicción meteorológica (TENERIFEANDO POR EL MUNDO | CICLO VIAJEROS)](https://github.com/jonay-ve/PRAC-1/blob/master/Imagen2.jpg)
 
 ## Contenido
 
@@ -47,7 +47,7 @@ Los datos de predicción meteorológica (**estadoCielo, probPrecipitacion, sensT
 
 Además de los paquetes anteriores, se utilizan otras librerías habituales como *Pandas* o *Datetime*, entre otras.
 
-En cuanto al periodo de tiempo, sólo se toman datos del 11 al 13 de noviembre. Los datos a recolectar no puede superar a una semana vista del momento en el que se ejecute, puesto que es el alcance de predicción disponible.
+En cuanto al periodo de tiempo, sólo se toman datos del 12 al 13 de noviembre. Los datos a recolectar no puede superar a una semana vista del momento en el que se ejecute, puesto que es el alcance de predicción disponible.
 
 ## Agredecimientos
 
@@ -57,19 +57,19 @@ La información ha sido recopilada de diferentes fuentes:
 
 Gracias a esta web hemos podido obtener los datos referidos a los eventos, utilizando técnicas de *Web Scraping* para extraer la información alojada en las páginas HTML.
 
-### [DarkSky](https://darksky.net/dev/docs)
+### [DarkSky](https://darksky.net/dev/docs) y [Google Maps Platform](https://cloud.google.com/maps-platform/)
 
 La disponibilidad de esta web nos ha posibilitado, junto con la API de Google, extraer predicciones meteorológicas en función de las coordenadas centrales de la localidad en la que se celebra el evento. Tenemos que tener en cuenta que, al igual que la API de Google, necesita un usuario y su uso tiene cargos asociados, si bien, esto se aplican a partir de un número bastante elevado de consultas.
-
 
 
 ### [AEMET](https://opendata.aemet.es/dist/index.html?#!/predicciones-especificas/Predicci%C3%B3n_por_municipios_diaria_Tiempo_actual)
 
 A pesar de que finalmente se toma la decisión de no usar esta API para obtener datos meteorológicos, debido a que se dieron problemas para relacionar las localizaciones de los eventos con uno de los parámetros de entrada de la API (el código del municipio), queremos agradecer la posibilidad que brinda esta fuente de datos abiertos. Un futuro desarrollo, podría incluir esta API, dada su gratuidad y el carácter oficial.
 
-### [Otros]
+### Otros
 
 También han sido de vital ayuda otras webs y repositorios para poder realizar este proyecto. A modo enunciativo:
+* [Repositorio DarkSky](https://github.com/Detrous/darksky/blob/master/README.md)
 * [DS Códigos Postales INE](https://github.com/inigoflores/ds-codigos-postales-ine-es/)
 * https://python-para-impacientes.blogspot.com/2014/02/operaciones-con-fechas-y-horas.html
 
@@ -87,15 +87,18 @@ Se desconoce si han habido iniciativas similares a esta, pero si son numerosos l
 
 ## Licencia
 
-En este punto tenemos que tener en cuenta tanto lo que especifíca la **AEMET** en la [Nota Legal](http://www.aemet.es/es/nota_legal) para uso y reutilización de los datos. En este sentido, se permite la reutilización de los documentos publicados *"...para fines comerciales y no comerciales. Esta autorización conlleva, asimismo, la cesión gratuita y no exclusiva de los derechos de propiedad intelectual, en su caso, correspondientes a tales documentos, autorizándose la realización de actividades de reproducción, distribución, comunicación pública o transformación, necesarias para desarrollar la actividad de reutilización autorizada, en cualquier modalidad y bajo cualquier formato"*.
-La web de **Lagenda**, al contrario que en el caso de la AEMET, no hace mención específica en su web, destinada, principalmente, a compartir y publicitar los eventos que se alojan en la misma. Por tanto, parece adecuado tener una licencia tipo **Released Under CC BY-SA 4.0 License**, puesto que:
-* Hemos de nombrar, explícitamente, la web de la AEMET, reconociendo su aportación de valor.
-* La AEMET permite su uso comercial y creemos que puede mejorar el objetivo de la web de Lagenda.
-* Si este se considerara un trabajo interesante, se reconocería la aportación de valor.
+Para ver la licencia de uso más adecuada, hemos de analizar nuestras 3 fuentes de datos. En cuanto a **Lagenda**, no nos ha sido posible ver su política de privacidad, pero es evidente el carácter divulgativo de la misma. 
+En cuanto a la API de **Google**, sus términos de privacidad están muy desarrollados. Por tanto, cualquier uso de los datos de esta API debe hacerse siempre indicando que los datos provienen de esta organización.
+Para los datos de las predicciones meteorológicas, **DarkSky** permite, explícitamente, la difusión del contenido de la misma siempre que se les haga mención.
+
+Por tanto, parece que lo adecuado es tener una licencia tipo **Released Under CC BY-SA 4.0 License**, puesto que vemos que podemos reproducir los datos de las bases de datos originales y queremos que, si se considerase de interés, pudiera seguir mejorándose. 
+
 
 ## Código y Dataset
 
-Tanto el código como el data set se pueden encontrar en el repositorio de Github siguiente:
+El código se puede encontrar en el siguiente repositorio de Github [PRAC-1](https://github.com/jonay-ve/PRAC-1)
+
+En cuanto al data set, está incluido en el repositorio con el nombre [Datoslagenda.csv](https://github.com/jonay-ve/PRAC-1/blob/master/Datoslagenda.csv)
 
 ## Contribuciones
 
