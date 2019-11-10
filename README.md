@@ -6,8 +6,8 @@ Usualmente, cuando vamos a algún tipo de evento cultural, en los días previos 
 
 Además, para los que vivimos en regiones con climas muy cambiantes como en las Islas Canarias, esta información se vuelve más necesaria. Es por ello, que consideramos de gran utilidad tener toda esta información en el mismo lugar.
 
-Las dos webs usadas permiten construir este data set, centrándonos en los eventos que se anuncian en la web [La Agenda](https://lagenda.org) y en las previsiones meteorológicas aportadas por la [DarkSky](https://darksky.net/dev).
-También se han obtenido datos a [Google Maps](https://cloud.google.com/maps-platform/) y del proyecto [DS Códigos Postales INE](https://github.com/inigoflores/ds-codigos-postales-ine-es/) para relacionar los lugares de La Agenda con los datos de DarkSky.
+Las webs usadas permiten construir este data set, centrándonos en los eventos que se anuncian en la web [La Agenda](https://lagenda.org) y en las previsiones meteorológicas aportadas por la [DarkSky](https://darksky.net/dev).
+También se han obtenido datos a [Google Maps](https://cloud.google.com/maps-platform/) para relacionar los lugares de La Agenda con los datos de DarkSky.
 
 
 ## Título para el data set
@@ -16,9 +16,13 @@ Datos de eventos y condiciones meteorológicas esperadas
 
 ## Descripción del data set
 
-Para dar respuesta a esta necesidad, el data set está compuesto de las variables principales referentes al evento: fecha, descripción, hora, municipio donde se celebra,... y datos referentes a las condiciones meteorológicas esperadas: temperatura, estado del cielo, probabilidad de lluvia.
+Para dar respuesta a esta necesidad, el data set está compuesto de las variables principales referentes al evento: fecha, descripción, hora, municipio donde se celebra,...; y datos referentes a las condiciones meteorológicas esperadas: temperatura, estado del cielo, probabilidad de lluvia.
 
 ## Representación gráfica
+
+![Imágen real de uno de los eventos (TENERIFEANDO POR EL MUNDO | CICLO VIAJEROS)](./imagen1.jpg)
+
+![Imágen de cómo se vería el evento con los datos de predicción meteorológica (TENERIFEANDO POR EL MUNDO | CICLO VIAJEROS)](./imagen2.jpg)
 
 ## Contenido
 
