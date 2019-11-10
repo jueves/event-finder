@@ -18,19 +18,27 @@ darksky_key = darksky_key.strip()
 
 
 # Fechas para hacer el test. Tener en cuenta que el rango de predicción de la AEMET es de 7 días
-dummy_date1 = datetime.date(2019, 11, 10)
-dummy_date2 = datetime.date(2019, 11, 11)
+dummy_date1 = datetime.datetime(2019, 11, 11, 20, 30)
+dummy_date2 = datetime.datetime(2019, 11, 13, 20, 30)
 
 # Scraping de los eventos
-legenda_data = getEvents(dummy_date1, dummy_date2)
+lagenda_data = getEvents(dummy_date1, dummy_date2)
 
 #Obtención de los datos del municipio
 location = Location(gmaps_key)
-codigoMunicipio=[]
-for i in range(len(legenda_data)):
-    codigoMunicipio.append(location.getLocation(legenda_data['location'][i]))
+coordenadasLocalidad=[]
+for i in lagenda_data.index:
+    coordenadasLocalidad.append(location.getLocation(lagenda_data['location'][i]))
 
-legenda_data['codigoMunicipio'] = codigoMunicipio
+lagenda_data['coordenadasLocalidad'] = coordenadasLocalidad
+
+# Eliminar ocurrencias eventos fuera de rango
+# Se han descargado solo los eventos que acontecen en el rango indicado,
+# pero para cada uno de ellos se han añadido todos los días en que tiene lugar.
+# Este filtrado mejora la eficiencia de weather.getWeather()
+lagenda_data.to_csv('Datoslagenda_noWeather.csv')
+lagenda_data = lagenda_data[lagenda_data.date <= dummy_date2]
+lagenda_data = lagenda_data[dummy_date1 <= lagenda_data.date]
 
 # Crear un bucle para obtener los datos del código del municipio y, 
 # con ese código, junto con la fecha del evento, obtener los datos de la 
@@ -42,25 +50,25 @@ sensTermMin=[]
 temperaturaMax=[]
 temperaturaMin=[]
 weather = Weather(darksky_key)
-for i in range(len(legenda_data)):
-    datosTiempo=weather.getWeather(legenda_data['codigoMunicipio'][i],legenda_data['date'][i])
-    estadoCielo.append(datosTiempo['estadoCielo'][i])
-    probPrecipitacion.append(datosTiempo['probPrecipitacion'][i])
-    sensTermMax.append(datosTiempo['sensTermMax'][i])
-    sensTermMin.append(datosTiempo['sensTermMin'][i])
-    temperaturaMax.append(datosTiempo['temperaturaMax'][i])
-    temperaturaMin.append(datosTiempo['temperaturaMin'][i])    
+for i in lagenda_data.index:
+    datosTiempo=weather.getWeather(lagenda_data['coordenadasLocalidad'][i],lagenda_data['date'][i])
+    estadoCielo.append(datosTiempo['estadoCielo'])
+    probPrecipitacion.append(datosTiempo['probPrecipitacion'])
+    sensTermMax.append(datosTiempo['sensTermMax'])
+    sensTermMin.append(datosTiempo['sensTermMin'])
+    temperaturaMax.append(datosTiempo['temperaturaMax'])
+    temperaturaMin.append(datosTiempo['temperaturaMin'])
     
     
-legenda_data['estadoCielo'] = estadoCielo
-legenda_data['probPrecipitacion'] = probPrecipitacion
-legenda_data['sensTermMax'] = sensTermMax
-legenda_data['sensTermMin'] = sensTermMin
-legenda_data['temperaturaMax'] = temperaturaMax
-legenda_data['temperaturaMin'] = temperaturaMin
+lagenda_data['estadoCielo'] = estadoCielo
+lagenda_data['probPrecipitacion'] = probPrecipitacion
+lagenda_data['sensTermMax'] = sensTermMax
+lagenda_data['sensTermMin'] = sensTermMin
+lagenda_data['temperaturaMax'] = temperaturaMax
+lagenda_data['temperaturaMin'] = temperaturaMin
 
 # Actualiza el archivo del diccionario de localizaciones 
 location.updateDictionaryFile()
 
 #guardar los datos en un documento .csv
-legenda_data.to_csv('DatosLegenda.csv')
+lagenda_data.to_csv('Datoslagenda.csv')
