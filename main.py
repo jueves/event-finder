@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
 
 from eventscraper import getEvents
-from weather import getWeather
-from location import getMunicipalityCode
+from weather import Weather
+from location import Location
 import datetime
 
 # Carga de las API keys
 # Cada usuario ha de tener sus propias claves. En este caso, para la práctica se adjuntan en el documento que se sube la web
-file_aemet = open("aemet_api_key.txt")
-aemet_key = file_aemet.readline()
-file_aemet.close()
-file_gmaps = open("gmaps_api_key.txt")
-gmaps_key = file_gmaps.readline()
-file_gmaps.close()
+with open("gmaps_api_key.txt") as file_gmaps:
+    gmaps_key = file_gmaps.readline()
+gmaps_key = gmaps_key.strip()
+
+with open("darksky_api_key.txt") as file_darksky:
+    darksky_key = file_darksky.read()
+darksky_key = darksky_key.strip()
 
 
 
@@ -24,9 +25,10 @@ dummy_date2 = datetime.date(2019, 11, 11)
 legenda_data = getEvents(dummy_date1, dummy_date2)
 
 #Obtención de los datos del municipio
+location = Location(gmaps_key)
 codigoMunicipio=[]
 for i in range(len(legenda_data)):
-    codigoMunicipio.append(getMunicipalityCode(legenda_data['location'][i]))
+    codigoMunicipio.append(location.getLocation(legenda_data['location'][i]))
 
 legenda_data['codigoMunicipio'] = codigoMunicipio
 
@@ -39,8 +41,9 @@ sensTermMax=[]
 sensTermMin=[]
 temperaturaMax=[]
 temperaturaMin=[]
+weather = Weather(darksky_key)
 for i in range(len(legenda_data)):
-    datosTiempo=getWeather(legenda_data['codigoMunicipio'][i],legenda_data['date'][i])
+    datosTiempo=weather.getWeather(legenda_data['codigoMunicipio'][i],legenda_data['date'][i])
     estadoCielo.append(datosTiempo['estadoCielo'][i])
     probPrecipitacion.append(datosTiempo['probPrecipitacion'][i])
     sensTermMax.append(datosTiempo['sensTermMax'][i])
@@ -56,6 +59,8 @@ legenda_data['sensTermMin'] = sensTermMin
 legenda_data['temperaturaMax'] = temperaturaMax
 legenda_data['temperaturaMin'] = temperaturaMin
 
+# Actualiza el archivo del diccionario de localizaciones 
+location.updateDictionaryFile()
 
 #guardar los datos en un documento .csv
 legenda_data.to_csv('DatosLegenda.csv')
