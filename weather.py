@@ -10,10 +10,7 @@ import datetime
 file_aemet = open("aemet_api_key.txt")
 apyKey = file_aemet.readline()
 file_aemet.close()
-"""
-#Alternativa, pasar la APIKEY por parametro, comentar las líneas anteriores y desconmentar la siguiente
-apyKey='PEGAR LA CLAVE'
-"""
+
 
 #Código para usar la API de la AEMET
 def getMunPrediction(codigoMun):
@@ -34,13 +31,7 @@ def getMunPrediction(codigoMun):
     datos = res.read().decode('utf-8','ignore')
     datos= json.loads(datos)
     return datos
-"""
-#Pasa un objeto tipo str en formato dd-mm-aaaa a un tipo de dato datetime
-#como en main.py ya se hace la transformación, queda sólo para realizar test
-def srtDatetime(fechaStr):
-    fechaStr = datetime.datetime.strptime(fechaStr, '%d-%m-%Y')
-    return fechaStr
-"""
+
 #Comprobación si existen predicciones disponibles: evalua si una fecha
 #de un evento está dentro del rango de predicción que tiene disponible la AEMET
 #Se usa como guía la web:
@@ -50,9 +41,6 @@ def fechaRangoPrediccion(fechaEvento):
     #Alcance máximo de predicción ofrecida por la AEMET
     diasMax=datetime.datetime.today().date() + datetime.timedelta(days=6)
     
-    """#Paso de tipo de datos str a datetime
-    fechaEvento = srtDatetime(fechaEvento)
-    """
     #calcula la diferencia de días
     resta=diasMax-fechaEvento
     
@@ -73,8 +61,6 @@ def getWeather(codigoMun,fecha):
         datosWeather="Sin datos disponibles de predicción"
     else:
         #se calcula el día objetivo para obtener los datos en forma de índice
-        """fecha=srtDatetime(fecha)
-        """
         hoy=datetime.datetime.today().date()
         diferencia= fecha - hoy
         resta=diferencia.days+1
@@ -92,14 +78,6 @@ def getWeather(codigoMun,fecha):
 
     return datosWeather
 
-"""Ejemplo para comprobar código
-municipio='38023'
-datossss=getMunPrediction(municipio)
-#vista previa para el municipio de la Laguna
-municipio='38024'
-fechaEvento='14-11-2019'
-print(getWeather(municipio,fechaEvento))
-"""
 # municipio Nombre oficial del municipio del evento.
 # fecha Objeto tipo date. Fecha del evento.
 # previsión Lista con valores para estado del cielo, lluvia, temperatura...
