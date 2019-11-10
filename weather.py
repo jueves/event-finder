@@ -48,6 +48,11 @@ class Weather:
         
         # Calcula si la fecha está en el rango que podemos obtener.
         exists_prediction = date < datetime.date.today() + datetime.timedelta(days=7)
+        
+        # Cuando hay un error en la localización esta adopta el valor 0
+        if location==0:
+            exists_prediction = False
+        
         location_key = str(location)
         
         if exists_prediction and location_key in self.weather_dic.keys():
