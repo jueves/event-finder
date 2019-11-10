@@ -1,84 +1,86 @@
-import http.client
-import ssl
-import json
 import datetime
+from darksky.api import DarkSky
+from darksky.types import languages, units, weather
 
-#Usamos la API de la AEMET que nos permite ver la predicción del tiempo en el día en curso hasta un horizonte de 7 días, 
-#tomando como parámetro de entrada el municipio. Los datos se actualizan continuamente.
+
+# Usamos la API de Dark Sky que nos permite ver la predicción del tiempo en el día en curso hasta un horizonte de 7 días, 
+# tomando como parámetro de entrada las coordenadas del lugar y la fecha del evento. Los datos se actualizan continuamente.
 
 #Por seguridad, mantenemos la clave para poder usar la API en un fichero externo
-file_aemet = open("aemet_api_key.txt")
-apyKey = file_aemet.readline()
-file_aemet.close()
+with open("darksky_api_key.txt") as file_darksky:
+    darksky_key = file_darksky.read()
 
+# Se elimina el salto de línea final de la clave.
+darksky_key = darksky_key.strip()
 
-#Código para usar la API de la AEMET
-def getMunPrediction(codigoMun):
-    #Petición de acceso a la API
-    context = ssl.create_default_context()
-    context.check_hostname = False
-    context.verify_mode = ssl.CERT_NONE
-    conn = http.client.HTTPSConnection("opendata.aemet.es", context = context)
-    headers = {'cache-control': "no-cache"}
-    conn.request("GET", f"/opendata/api/prediccion/especifica/municipio/diaria/{codigoMun}/?api_key={apyKey}", headers=headers, )
-    res = conn.getresponse()
-    data = res.read().decode('utf-8','ignore')
-    data = json.loads(data)
+# Se crea un objeto darksky con la clave de la API.
+darksky = DarkSky(darksky_key)
 
-    #Guardando los datos tipo json referentes al municipio elegido
-    conn.request("GET", data['datos'], headers=headers, )
-    res= conn.getresponse()
-    datos = res.read().decode('utf-8','ignore')
-    datos= json.loads(datos)
-    return datos
+# Se crea un archivo de previsiones para cada localización y día.
+# Con esto reducimos las llamadas a la API.
+# Se incluye una entrada para los casos en que no sea posible 
+# devolver una predicción.
+weather_dic = {'non_available': {'estadoCielo': 999,
+                                 'probPrecipitacion': 999,
+                                 'sensTermMax': 999,
+                                 'sensTermMin': 999,
+                                 'temperaturaMax': 999,
+                                 'temperaturaMin': 999,}}
 
-#Comprobación si existen predicciones disponibles: evalua si una fecha
-#de un evento está dentro del rango de predicción que tiene disponible la AEMET
-#Se usa como guía la web:
-#https://python-para-impacientes.blogspot.com/2014/02/operaciones-con-fechas-y-horas.html    
-def fechaRangoPrediccion(fechaEvento):
-
-    #Alcance máximo de predicción ofrecida por la AEMET
-    diasMax=datetime.datetime.today().date() + datetime.timedelta(days=6)
+def getWeather(location, date):
+    # Recibe una lista con las coordenadas de un lugar y un objeto datetime.datetime
+    # con el día sobre el que se quiere la predicción.
+    # Devuelve un diccionario con la previsisión para dicho día.
     
-    #calcula la diferencia de días
-    resta=diasMax-fechaEvento
+    # Trabajaremos sólo con días, convertimos el datetime.datime a datetime.date
+    date = date.date()
     
-    #comprueba que el día que se pide es está dentro del alcance de la
-    #predicción proporcionada por AEMET
-    if resta.days<7 and resta.days>-1:
-        contenido='TRUE'
-    else:
-        contenido='FALSE'
+    # Fijamos la predicción por defecto
+    prediction = weather_dic['non_available']
     
-    return contenido
-
-#Datos que queremos presentar/guardar en nuestro repositorio  
-def getWeather(codigoMun,fecha):
     
-    #Comprobamos si la fecha es válida
-    if fechaRangoPrediccion(fecha)=='FALSE':
-        datosWeather="Sin datos disponibles de predicción"
-    else:
-        #se calcula el día objetivo para obtener los datos en forma de índice
-        hoy=datetime.datetime.today().date()
-        diferencia= fecha - hoy
-        resta=diferencia.days+1
+    # Comprobamos si existe predicción para el municipio
+    # Dado que las predicciones sólo se almacenan durante la ejecución del
+    # programa, estas se actualizarán en cada ejecución del mismo.
+    archived_prediction = False
+    
+    # Calcula si la fecha está en el rango que podemos obtener.
+    exists_prediction = date < datetime.date.today() + datetime.timedelta(days=7)
+    location_key = str(location)
+    
+    if exists_prediction and location_key in weather_dic.keys():
+        if date in weather_dic[location_key].keys():
+            archived_prediction = True
+            prediction = weather_dic[location_key][date]
+    
+    if exists_prediction and not archived_prediction:
+        # Obtenemos los datos de Dark Sky para toda la semana en location
+        forecast = darksky.get_forecast(
+                location[0], location[1],
+                extend=False, # default `False`
+                lang=languages.ENGLISH, # default `ENGLISH`
+                units=units.AUTO, # default `auto`
+                exclude=[weather.MINUTELY, weather.ALERTS] # default `[]`
+                )
         
-        #Obtenemos la predicción del municipio de interés
-        dat=getMunPrediction(codigoMun)
+        # Extraemos los datos de interés y los almacenamos en forma de
+        # diccionario.
+        location_prediction = {}
+        for day in forecast.daily.data:
+            day_prediction = {'estadoCielo': day.cloud_cover,
+                              'probPrecipitacion': day.precip_probability,
+                              'sensTermMax': day.apparent_temperature_max,
+                              'sensTermMin': day.temperature_min,
+                              'temperaturaMax': day.temperature_max,
+                              'temperaturaMin': day.temperature_min,}
+            
+            location_prediction[day.time.date()] = day_prediction
         
-        #Se guardan los datos de la predicción
-        datosWeather={'estadoCielo': dat[0]['prediccion']['dia'][resta]['estadoCielo'][0]['descripcion'],
-                      'probPrecipitacion':dat[0]['prediccion']['dia'][resta]['probPrecipitacion'][0]['value'],
-                      'sensTermMax':dat[0]['prediccion']['dia'][resta]['sensTermica']['maxima'],
-                      'sensTermMin':dat[0]['prediccion']['dia'][resta]['sensTermica']['minima'],
-                      'temperaturaMax':dat[0]['prediccion']['dia'][resta]['temperatura']['maxima'],
-                      'temperaturaMin':dat[0]['prediccion']['dia'][resta]['temperatura']['minima']}
+        # Actualizamos el diccionario principal
+        weather_dic.update({location_key: location_prediction})
+        
+        # Nos asguramos de que disponemos de los dato y los devolvemos.
+        if date in location_prediction.keys():
+            prediction = location_prediction[date]
 
-    return datosWeather
-
-# municipio Nombre oficial del municipio del evento.
-# fecha Objeto tipo date. Fecha del evento.
-# previsión Lista con valores para estado del cielo, lluvia, temperatura...
-# API AEMET: https://opendata.aemet.es/centrodedescargas/inicio
+    return(prediction)
