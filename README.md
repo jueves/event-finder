@@ -20,7 +20,7 @@ Para dar respuesta a esta necesidad, el data set está compuesto de las variable
 
 ## Representación gráfica
 
-[Imagen real de uno de los eventos (TENERIFEANDO POR EL MUNDO | CICLO VIAJEROS)] (https://www.lagenda.org/programacion/charla-viajeros-cuba-13908)
+[Imagen real de uno de los eventos (TENERIFEANDO POR EL MUNDO | CICLO VIAJEROS)](https://www.lagenda.org/programacion/charla-viajeros-cuba-13908)
 
 ![Imagen real de uno de los eventos (TENERIFEANDO POR EL MUNDO | CICLO VIAJEROS)](https://github.com/jonay-ve/PRAC-1/blob/master/Imagen1.png)
 
