@@ -14,7 +14,7 @@ class Weather:
     # Con esto reducimos las llamadas a la API.
     # Se incluye una entrada para los casos en que no sea posible 
     # devolver una predicción.
-    weather_dic = {'non_available': {'estadoCielo': 999,
+    weather_dic = {'non_available': {'nubosidad': 999,
                                      'probPrecipitacion': 999,
                                      'sensTermMax': 999,
                                      'sensTermMin': 999,
@@ -74,7 +74,7 @@ class Weather:
             # diccionario.
             location_prediction = {}
             for day in forecast.daily.data:
-                day_prediction = {'estadoCielo': day.cloud_cover,
+                day_prediction = {'nubosidad': day.cloud_cover,
                                   'probPrecipitacion': day.precip_probability,
                                   'sensTermMax': day.apparent_temperature_max,
                                   'sensTermMin': day.apparent_temperature_min,

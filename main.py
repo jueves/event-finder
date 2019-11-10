@@ -51,7 +51,7 @@ lagenda_data = lagenda_data[start_date <= lagenda_data.date]
 # Crear un bucle para obtener los datos del código del municipio y, 
 # con ese código, junto con la fecha del evento, obtener los datos de la 
 # predicción para ese día
-estadoCielo=[]
+nubosidad=[]
 probPrecipitacion=[]
 sensTermMax=[]
 sensTermMin=[]
@@ -60,7 +60,7 @@ temperaturaMin=[]
 weather = Weather(darksky_key)
 for i in lagenda_data.index:
     datosTiempo=weather.getWeather(lagenda_data['coordenadasLocalidad'][i],lagenda_data['date'][i])
-    estadoCielo.append(datosTiempo['estadoCielo'])
+    nubosidad.append(datosTiempo['nubosidad'])
     probPrecipitacion.append(datosTiempo['probPrecipitacion'])
     sensTermMax.append(datosTiempo['sensTermMax'])
     sensTermMin.append(datosTiempo['sensTermMin'])
@@ -68,7 +68,7 @@ for i in lagenda_data.index:
     temperaturaMin.append(datosTiempo['temperaturaMin'])
     
     
-lagenda_data['estadoCielo'] = estadoCielo
+lagenda_data['nubosidad'] = nubosidad
 lagenda_data['probPrecipitacion'] = probPrecipitacion
 lagenda_data['sensTermMax'] = sensTermMax
 lagenda_data['sensTermMin'] = sensTermMin
