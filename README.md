@@ -53,7 +53,15 @@ La información ha sido recopilada de diferentes fuentes:
 Gracias a esta web hemos podido obtener los datos referidos a los eventos, utilizando técnicas de *Web Scraping* para extraer la información alojada en las páginas HTML.
 
 ### [AEMET](https://opendata.aemet.es/dist/index.html?#!/predicciones-especificas/Predicci%C3%B3n_por_municipios_diaria_Tiempo_actual)
-A través del *Open Data* de la AEMET ha sido posible descargar información meteorológica para la fecha en la que se produce el evento. Agradecer la claridad para hacer uso de esta API en esta propia web.
+A través del *Open Data* de la AEMET ha sido posible descargar información meteorológica para la fecha en la que se produce el evento. Agradecer la claridad para hacer uso de esta API en esta propia web e indicar que usamos *"Información elaborada por la Agencia Estatal de Meteorología"*.
+
+### [Otros]
+
+También han sido de vital ayuda otras webs y repositorios para poder realizar este proyecto. A modo enunciativo:
+* [DS Códigos Postales INE](https://github.com/inigoflores/ds-codigos-postales-ine-es/)
+* https://python-para-impacientes.blogspot.com/2014/02/operaciones-con-fechas-y-horas.html
+
+
 
 ## Inspiración
 
@@ -66,6 +74,12 @@ Otra aplicabilidad de este data set sería poder hacer un estudio de la relació
 Se desconoce si han habido iniciativas similares a esta, pero si son numerosos los estudios en los que se relaciona una variable endógena con variables exógenas, como las condiciones meteorológicas.
 
 ## Licencia
+
+En este punto tenemos que tener en cuenta tanto lo que especifíca la AEMET en la [Nota Legal](http://www.aemet.es/es/nota_legal) para uso y reutilización de los datos. En este sentido, se permite la reutilización de los documentos publicados *"...para fines comerciales y no comerciales. Esta autorización conlleva, asimismo, la cesión gratuita y no exclusiva de los derechos de propiedad intelectual, en su caso, correspondientes a tales documentos, autorizándose la realización de actividades de reproducción, distribución, comunicación pública o transformación, necesarias para desarrollar la actividad de reutilización autorizada, en cualquier modalidad y bajo cualquier formato"*.
+La web de **Lagenda**, al contrario que en el caso de la AEMET, no hace mención específica en su web, destinada, principalmente, a compartir y publicitar los eventos que se alojan en la misma. Por tanto, parece adecuado tener una licencia tipo Released Under CC BY-SA 4.0 License, puesto que:
+* Hemos de nombrar, explícitamente, la web de la AEMET, reconociendo su aportación de valor.
+* Se permite su uso comercial, estando permitido por la AEMET y creemos que puede mejorar el objetivo de la web de Lagenda.
+* Si este se considerara un trabajo interesante, se reconocería la aportación de valor.
 
 ## Código y Dataset
 
