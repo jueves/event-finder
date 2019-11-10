@@ -50,7 +50,7 @@ class Weather:
         exists_prediction = date < datetime.date.today() + datetime.timedelta(days=7)
         
         # Cuando hay un error en la localización esta adopta el valor 0
-        if location==0:
+        if location==[0]:
             exists_prediction = False
         
         location_key = str(location)

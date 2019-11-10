@@ -4,6 +4,7 @@ from eventscraper import getEvents
 from weather import Weather
 from location import Location
 import datetime
+import sys
 
 # Carga de las API keys
 # Cada usuario ha de tener sus propias claves. En este caso, para la práctica se adjuntan en el documento que se sube la web
@@ -16,13 +17,20 @@ with open("darksky_api_key.txt") as file_darksky:
 darksky_key = darksky_key.strip()
 
 
-
+# Lectura de los argumentos
+if len(sys.argv)==3:
+    arg1 = sys.argv[1].split("-")
+    arg2 = sys.argv[2].split("-")
+    start_date = datetime.datetime(int(arg1[2]), int(arg1[1]), int(arg1[0]), 0, 0)
+    end_date = datetime.datetime(int(arg2[2]), int(arg2[1]), int(arg2[0]), 0, 0)   
+else:
+    start_date = datetime.datetime.today()
+    end_date = start_date + datetime.timedelta(days=5)
+    
 # Fechas para hacer el test. Tener en cuenta que el rango de predicción de la AEMET es de 7 días
-dummy_date1 = datetime.datetime(2019, 11, 11, 20, 30)
-dummy_date2 = datetime.datetime(2019, 11, 13, 20, 30)
 
 # Scraping de los eventos
-lagenda_data = getEvents(dummy_date1, dummy_date2)
+lagenda_data = getEvents(start_date, end_date)
 
 #Obtención de los datos del municipio
 location = Location(gmaps_key)
@@ -37,8 +45,8 @@ lagenda_data['coordenadasLocalidad'] = coordenadasLocalidad
 # pero para cada uno de ellos se han añadido todos los días en que tiene lugar.
 # Este filtrado mejora la eficiencia de weather.getWeather()
 lagenda_data.to_csv('Datoslagenda_noWeather.csv')
-lagenda_data = lagenda_data[lagenda_data.date <= dummy_date2]
-lagenda_data = lagenda_data[dummy_date1 <= lagenda_data.date]
+lagenda_data = lagenda_data[lagenda_data.date <= end_date]
+lagenda_data = lagenda_data[start_date <= lagenda_data.date]
 
 # Crear un bucle para obtener los datos del código del municipio y, 
 # con ese código, junto con la fecha del evento, obtener los datos de la 
