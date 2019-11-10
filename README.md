@@ -20,9 +20,9 @@ Para dar respuesta a esta necesidad, el data set está compuesto de las variable
 
 ## Representación gráfica
 
-![Imágen real de uno de los eventos (TENERIFEANDO POR EL MUNDO | CICLO VIAJEROS)](./imagen1.jpg)
+![Imágen real de uno de los eventos (TENERIFEANDO POR EL MUNDO | CICLO VIAJEROS)](./imagen1.jpeg)
 
-![Imágen de cómo se vería el evento con los datos de predicción meteorológica (TENERIFEANDO POR EL MUNDO | CICLO VIAJEROS)](./imagen2.jpg)
+![Imágen de cómo se vería el evento con los datos de predicción meteorológica (TENERIFEANDO POR EL MUNDO | CICLO VIAJEROS)](./imagen2.jpeg)
 
 ## Contenido
 
