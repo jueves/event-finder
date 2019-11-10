@@ -6,8 +6,8 @@ Usualmente, cuando vamos a algún tipo de evento cultural, en los días previos 
 
 Además, para los que vivimos en regiones con climas muy cambiantes como en las Islas Canarias, esta información se vuelve más necesaria. Es por ello, que consideramos de gran utilidad tener toda esta información en el mismo lugar.
 
-Las dos webs usadas permiten construir este data set, centrándonos en los eventos que se anuncian en la web [La Agenda](https://lagenda.org) y en las previsiones meteorológicas aportadas por la [AEMET](https://opendata.aemet.es/centrodedescargas/inicio).
-También se han obtenido datos a [Google Maps](https://cloud.google.com/maps-platform/) y del proyecto [DS Códigos Postales INE](https://github.com/inigoflores/ds-codigos-postales-ine-es/) para relacionar los lugares de La Agenda con los datos de AEMET.
+Las dos webs usadas permiten construir este data set, centrándonos en los eventos que se anuncian en la web [La Agenda](https://lagenda.org) y en las previsiones meteorológicas aportadas por la [DarkSky](https://darksky.net/dev).
+También se han obtenido datos a [Google Maps](https://cloud.google.com/maps-platform/) y del proyecto [DS Códigos Postales INE](https://github.com/inigoflores/ds-codigos-postales-ine-es/) para relacionar los lugares de La Agenda con los datos de DarkSky.
 
 
 ## Título para el data set
@@ -27,22 +27,23 @@ Para cada evento, el cual se corresponde con un registro en el conjunto de datos
 * **title**: título del evento. Str.
 * **date**: día en el que se celebra el evento, en el formato dd/mm/aaa.  
 * **location**: lugar donde se celebra el evento. Str.
+* **description**: descripción del evento. Str.
 * **catrgory**: categoría en la que se engloba el evento. Str.  
 * **url**: url en la que se publica el evento. Str. 
-* **codigoMunicipio**: código del municipio donde se celebra el evento. Int.
-* **estadoCielo**: recoge el estado del cielo el día del evento. Predicción 00-24. Vacío en caso de estar despejado o no tener predicción disponible. Str.
-* **probPrecipitacion**: recoge la probabilidad de que produzcan precipitaciones. Predicción 00-24. Int.
+* **coordenadasLocalidad**: coordenadas centrales de la localidad donde se celebra el evento. Int.
+* **estadoCielo**: porcentaje de cielo cubierto por nubes. Int.
+* **probPrecipitacion**: recoge la probabilidad de que produzcan precipitaciones. Int.
 * **sensTermMax**: recoge la sensación térmica máxima el día del evento. Int.
 * **sensTermMin**: recoge la sensación térmica mínima el día del evento. Int.
 * **temperaturaMax**: recoge la temperatura máxima el día del evento. Int.
 * **temperaturaMin**: recoge la temperatura mínima el día del evento. Int.
 
 Los datos del evento (**title, date, location, catrgory, url**) se obtienen con los paquetes *BeautifulSoup* y *Request*.
-Los datos de predicción meteorológica (**estadoCielo, probPrecipitacion, sensTermMax, sensTermMin, temperaturaMax, temperaturaMin**) se obtienen a través de la API de la **AEMET**, ayudados de los paquetes *http.client* y *ssl*.
+Los datos de predicción meteorológica (**estadoCielo, probPrecipitacion, sensTermMax, sensTermMin, temperaturaMax, temperaturaMin**) se obtienen a través de la API de la **DarkSky**, ayudados de los paquetes *darksky.api* y *darksky.types*.
 
-Además de los paquetes anteriores, se utilizan otras librerías como *Pandas* o *Datetime*
+Además de los paquetes anteriores, se utilizan otras librerías habituales como *Pandas* o *Datetime*, entre otras.
 
-En cuanto al periodo de tiempo, sólo se toman datos a una semana vista, puesto que es el alcance de predicción que ofrece AEMET.
+En cuanto al periodo de tiempo, sólo se toman datos del 11 al 13 de noviembre. Los datos a recolectar no puede superar a una semana vista del momento en el que se ejecute, puesto que es el alcance de predicción disponible.
 
 ## Agredecimientos
 
@@ -52,8 +53,15 @@ La información ha sido recopilada de diferentes fuentes:
 
 Gracias a esta web hemos podido obtener los datos referidos a los eventos, utilizando técnicas de *Web Scraping* para extraer la información alojada en las páginas HTML.
 
+### [DarkSky](https://darksky.net/dev/docs)
+
+La disponibilidad de esta web nos ha posibilitado, junto con la API de Google, extraer predicciones meteorológicas en función de las coordenadas centrales de la localidad en la que se celebra el evento. Tenemos que tener en cuenta que, al igual que la API de Google, necesita un usuario y su uso tiene cargos asociados, si bien, esto se aplican a partir de un número bastante elevado de consultas.
+
+
+
 ### [AEMET](https://opendata.aemet.es/dist/index.html?#!/predicciones-especificas/Predicci%C3%B3n_por_municipios_diaria_Tiempo_actual)
-A través del *Open Data* de la AEMET ha sido posible descargar información meteorológica para la fecha en la que se produce el evento. Agradecer la claridad para hacer uso de esta API en esta propia web e indicar que usamos *"Información elaborada por la Agencia Estatal de Meteorología"*.
+
+A pesar de que finalmente se toma la decisión de no usar esta API para obtener datos meteorológicos, debido a que se dieron problemas para relacionar las localizaciones de los eventos con uno de los parámetros de entrada de la API (el código del municipio), queremos agradecer la posibilidad que brinda esta fuente de datos abiertos. Un futuro desarrollo, podría incluir esta API, dada su gratuidad y el carácter oficial.
 
 ### [Otros]
 
