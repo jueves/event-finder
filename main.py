@@ -7,7 +7,6 @@ import datetime
 import sys
 
 # Carga de las API keys
-# Cada usuario ha de tener sus propias claves. En este caso, para la práctica se adjuntan en el documento que se sube la web
 with open("gmaps_api_key.txt") as file_gmaps:
     gmaps_key = file_gmaps.readline()
 gmaps_key = gmaps_key.strip()
@@ -17,7 +16,7 @@ with open("darksky_api_key.txt") as file_darksky:
 darksky_key = darksky_key.strip()
 
 
-# Lectura de los argumentos
+# Lectura de argumentos
 if len(sys.argv)==3:
     arg1 = sys.argv[1].split("-")
     arg2 = sys.argv[2].split("-")
@@ -26,8 +25,6 @@ if len(sys.argv)==3:
 else:
     start_date = datetime.datetime.today()
     end_date = start_date + datetime.timedelta(days=5)
-    
-# Fechas para hacer el test. Tener en cuenta que el rango de predicción de la AEMET es de 7 días
 
 # Scraping de los eventos
 lagenda_data = getEvents(start_date, end_date)
@@ -40,17 +37,14 @@ for i in lagenda_data.index:
 
 lagenda_data['coordenadasLocalidad'] = coordenadasLocalidad
 
-# Eliminar ocurrencias eventos fuera de rango
+# Se eliminan las ocurrencias eventos fuera de rango.
 # Se han descargado solo los eventos que acontecen en el rango indicado,
-# pero para cada uno de ellos se han añadido todos los días en que tiene lugar.
-# Este filtrado mejora la eficiencia de weather.getWeather()
+# pero para cada uno de ellos se han añadido todos los días en que este tiene lugar.
 lagenda_data.to_csv('Datoslagenda_noWeather.csv')
 lagenda_data = lagenda_data[lagenda_data.date <= end_date]
 lagenda_data = lagenda_data[start_date <= lagenda_data.date]
 
-# Crear un bucle para obtener los datos del código del municipio y, 
-# con ese código, junto con la fecha del evento, obtener los datos de la 
-# predicción para ese día
+# Obtención de previsiones meteorológicas
 nubosidad=[]
 probPrecipitacion=[]
 sensTermMax=[]
@@ -75,8 +69,8 @@ lagenda_data['sensTermMin'] = sensTermMin
 lagenda_data['temperaturaMax'] = temperaturaMax
 lagenda_data['temperaturaMin'] = temperaturaMin
 
-# Actualiza el archivo del diccionario de localizaciones 
+# Actualización del archivo del diccionario de localizaciones 
 location.updateDictionaryFile()
 
-#guardar los datos en un documento .csv
+# Exportación de datos de eventos
 lagenda_data.to_csv('Datoslagenda.csv')
