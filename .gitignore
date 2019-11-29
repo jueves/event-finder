@@ -1,4 +1,9 @@
 .spyproject
+event_filters.json
+Datoslagenda.csv
+Datoslagenda_FULL.csv
+top20.csv
+positivos.csv
 aemet_api_key.txt
 gmaps_api_key.txt
 darksky_api_key.txt

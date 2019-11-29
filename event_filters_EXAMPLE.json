@@ -1,0 +1,1 @@
+{"filtro1": {"campos": ["title", "description"], "puntos": 1, "palabras": ["rock", "blues", "jam"]}, "filtro2": {"campos": ["location"], "puntos": 10, "palabras": ["La Laguna"]}}

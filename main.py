@@ -1,76 +1,77 @@
 # -*- coding: utf-8 -*-
 
 from eventscraper import getEvents
-from weather import Weather
 from location import Location
+from events_rating import Event_rating
 import datetime
 import sys
 
-# Carga de las API keys
-with open("gmaps_api_key.txt") as file_gmaps:
-    gmaps_key = file_gmaps.readline()
-gmaps_key = gmaps_key.strip()
+# Creates dictionary of arguments
+args_dic = {}
+for argument in sys.argv:
+    arg_list = argument.split("=")
+    if len(arg_list) == 2:
+        args_dic.update({arg_list[0]: arg_list[1]})
 
-with open("darksky_api_key.txt") as file_darksky:
-    darksky_key = file_darksky.read()
-darksky_key = darksky_key.strip()
-
-
-# Lectura de argumentos
-if len(sys.argv)==3:
-    arg1 = sys.argv[1].split("-")
-    arg2 = sys.argv[2].split("-")
-    start_date = datetime.datetime(int(arg1[2]), int(arg1[1]), int(arg1[0]), 0, 0)
-    end_date = datetime.datetime(int(arg2[2]), int(arg2[1]), int(arg2[0]), 0, 0)   
+# Sets variables from arguments
+valid_modes = ["multiloc", "laguna"]
+if "mode" in args_dic.keys():
+    if args_dic["mode"] in valid_modes:
+        program_mode = args_dic["mode"]
+    else:
+        print("Invalid mode. Running in Laguna mode.")
+        program_mode = "laguna"
 else:
-    start_date = datetime.datetime.today()
-    end_date = start_date + datetime.timedelta(days=5)
+    program_mode = "laguna"
+
+if "days" in args_dic.keys():
+    if args_dic["days"] in range(30):
+        days_to_get = args_dic["days"]
+    else:
+        print("Invalid day range. Getting 5 days by default.")
+        days_to_get = 5
+else:
+    days_to_get = 5
+
+start_date = datetime.datetime.today()
+end_date = start_date + datetime.timedelta(days=days_to_get)
 
 # Scraping de los eventos
-lagenda_data = getEvents(start_date, end_date)
+lagenda_data = getEvents(start_date, end_date, program_mode)
 
-#Obtención de los datos del municipio
-location = Location(gmaps_key)
-coordenadasLocalidad=[]
-for i in lagenda_data.index:
-    coordenadasLocalidad.append(location.getLocation(lagenda_data['location'][i]))
+# Get locations
+if program_mode == "multiloc":
+    location = Location()
+    locality=[]
+    for i in lagenda_data.index:
+        locality.append(location.getLocation(lagenda_data['location'][i]))
 
-lagenda_data['coordenadasLocalidad'] = coordenadasLocalidad
+elif program_mode == "laguna":
+    locality=["La Laguna"]*lagenda_data.shape[0]
+
+lagenda_data['locality'] = locality
 
 # Se eliminan las ocurrencias eventos fuera de rango.
 # Se han descargado solo los eventos que acontecen en el rango indicado,
 # pero para cada uno de ellos se han añadido todos los días en que este tiene lugar.
-lagenda_data.to_csv('Datoslagenda_noWeather.csv')
+lagenda_data.to_csv('Datoslagenda_FULL.csv')
 lagenda_data = lagenda_data[lagenda_data.date <= end_date]
 lagenda_data = lagenda_data[start_date <= lagenda_data.date]
 
-# Obtención de previsiones meteorológicas
-nubosidad=[]
-probPrecipitacion=[]
-sensTermMax=[]
-sensTermMin=[]
-temperaturaMax=[]
-temperaturaMin=[]
-weather = Weather(darksky_key)
-for i in lagenda_data.index:
-    datosTiempo=weather.getWeather(lagenda_data['coordenadasLocalidad'][i],lagenda_data['date'][i])
-    nubosidad.append(datosTiempo['nubosidad'])
-    probPrecipitacion.append(datosTiempo['probPrecipitacion'])
-    sensTermMax.append(datosTiempo['sensTermMax'])
-    sensTermMin.append(datosTiempo['sensTermMin'])
-    temperaturaMax.append(datosTiempo['temperaturaMax'])
-    temperaturaMin.append(datosTiempo['temperaturaMin'])
-    
-    
-lagenda_data['nubosidad'] = nubosidad
-lagenda_data['probPrecipitacion'] = probPrecipitacion
-lagenda_data['sensTermMax'] = sensTermMax
-lagenda_data['sensTermMin'] = sensTermMin
-lagenda_data['temperaturaMax'] = temperaturaMax
-lagenda_data['temperaturaMin'] = temperaturaMin
+# Filtrado
+rating = []
+rater = Event_rating()
+for index, evento in lagenda_data.iterrows():
+    rating.append(rater.rateEvent(evento))
+lagenda_data['rating'] = rating
+
+lagenda_data.nlargest(20, "rating").to_csv("top20.csv")
+
+lagenda_data[lagenda_data.rating > 0].to_csv("positivos.csv")
 
 # Actualización del archivo del diccionario de localizaciones 
-location.updateDictionaryFile()
+if program_mode=="multiloc":
+    location.updateDictionaryFile()
 
 # Exportación de datos de eventos
 lagenda_data.to_csv('Datoslagenda.csv')

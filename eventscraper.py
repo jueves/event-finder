@@ -9,21 +9,31 @@ import re
 
 # Functions to scrape lagenda.org
 
-def getPageSoup(initial_date, end_date):
+def getPageSoup(initial_date, end_date, mode="laguna"):
     # Devuelve un objeto BeautifulSoup de la página de resultados
     # de eventos en dicho rango de fechas.
 
     # Obtener URL
-    urlpart1 = ("https://lagenda.org/programacion/hoy?field_fecha_value%5Bmin%5D%5Bdate%5D=")
     urlsep = "%2F"
-    urlpart2 = "&field_fecha_value%5Bmax%5D%5Bdate%5D="
     initial_formated_date = (str(initial_date.day)+urlsep
                              + str(initial_date.month)+urlsep
                              + str(initial_date.year))
     end_formated_date = (str(end_date.day)+urlsep +
                          str(end_date.month)+urlsep+str(end_date.year))
-    url_lagenda = urlpart1+initial_formated_date+urlpart2+end_formated_date
-
+    
+    # Sets diferent urls depending on selected running mode
+    if mode=="multiloc":
+        urlpart1 = ("https://lagenda.org/programacion/hoy?field_fecha_value%5Bmin%5D%5Bdate%5D=")
+        urlpart2 = "&field_fecha_value%5Bmax%5D%5Bdate%5D="
+        url_lagenda = urlpart1+initial_formated_date+urlpart2+end_formated_date
+    elif mode=="laguna":
+        urlpart1 = "https://lagenda.org/programacion/contra-poesia-ante-la-represion-2dic16?field_fecha_value[min][date]="
+        urlpart2 = "&field_fecha_value[max][date]="
+        urlpart3 = "&field_fecha_continua_value[value][date]="
+        urlpart4 = "&lugar=1067&categoria=All"
+        url_lagenda = (urlpart1+initial_formated_date+urlpart2+end_formated_date
+                       +urlpart3+initial_formated_date+urlpart4)
+    
     # Obtener soup
     lagenda_page = requests.get(url_lagenda)
     soup = BeautifulSoup(lagenda_page.content)
@@ -172,12 +182,12 @@ def scrapEvents(soup):
     data = pd.DataFrame(tabla_eventos, columns=["title", "date", "location", "description", "category", "url"])
     return(data)
 
-def getEvents(initial_date, end_date):
+def getEvents(initial_date, end_date, mode="laguna"):
     # Toma las fechas de inicio y fin del periodo sobre el que queremos
     # consultar eventos. Ambas han de ser objetos de tipo datetime.
     # Devuelve un dataframe de Pandas con los datos de los eventos.
     # No incluye la metereología.
     
-    lagenda_soup = getPageSoup(initial_date, end_date)
+    lagenda_soup = getPageSoup(initial_date, end_date, mode="laguna")
     data = scrapEvents(lagenda_soup)
     return(data)
