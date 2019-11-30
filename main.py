@@ -5,6 +5,7 @@ from location import Location
 from events_rating import Event_rating
 import datetime
 import sys
+from icalendar import Calendar, Event
 
 # Creates dictionary of arguments
 args_dic = {}
@@ -75,3 +76,19 @@ if program_mode=="multiloc":
 
 # Exportación de datos de eventos
 lagenda_data.to_csv('Datoslagenda.csv')
+
+top20events = lagenda_data.nlargest(20, "rating")
+
+cal = Calendar()
+for index, row in top20events.iterrows():
+    event = Event()
+    event.add('summary', row['category'])
+    event.add('dtstart', row['date'])
+    simulated_end_date = row['date']+datetime.timedelta(hours=2)
+    #event.add('dtend', simulated_end_date)
+    event.add('description', row['description']+"\n"+row['url'])
+    event.add('location', row['location'])
+    cal.add_component(event)
+
+with open('calendar_events.ics', 'wb') as file:
+    file.write(cal.to_ical())
